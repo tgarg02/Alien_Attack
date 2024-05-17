@@ -1,0 +1,63 @@
+[gd_scene load_steps=10 format=3 uid="uid://c3dfdvqc3rtho"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_kob4m"]
+[ext_resource type="Texture2D" uid="uid://sd01nv6u70vs" path="res://assests/textures/player_ship.png" id="1_vw7wb"]
+[ext_resource type="AudioStream" uid="uid://cpx2ixbwa0rm4" path="res://assests/audio/sfx_laser2.wav" id="3_w6m4x"]
+
+[sub_resource type="Gradient" id="Gradient_8clc7"]
+offsets = PackedFloat32Array(0, 0.469136, 1)
+colors = PackedColorArray(1, 0.815686, 0, 0, 1, 0.431373, 0, 1, 1, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_k43y2"]
+gradient = SubResource("Gradient_8clc7")
+
+[sub_resource type="Curve" id="Curve_cw4ni"]
+_data = [Vector2(0, 0.494737), 0.0, 0.0, 0, 0, Vector2(0.991081, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_etgc0"]
+curve = SubResource("Curve_cw4ni")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2dm1t"]
+lifetime_randomness = 0.3
+emission_shape = 3
+emission_box_extents = Vector3(1, 15, 1)
+particle_flag_disable_z = true
+spread = 30.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = -200.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_etgc0")
+color_ramp = SubResource("GradientTexture1D_k43y2")
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_83tls"]
+radius = 29.0
+height = 106.0
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 2
+motion_mode = 1
+script = ExtResource("1_kob4m")
+
+[node name="FlameParticleEffect" type="GPUParticles2D" parent="."]
+position = Vector2(-36, 1)
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_2dm1t")
+lifetime = 0.3
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_vw7wb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_83tls")
+
+[node name="RocketContainer" type="Node" parent="."]
+
+[node name="RocketShot" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_w6m4x")
+volume_db = 10.0

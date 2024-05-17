@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://bjlkh4tdanaly"]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_p3o31"]
+[ext_resource type="Texture2D" uid="uid://chaub3couvrwf" path="res://assests/textures/enemy_ship.png" id="1_t4v8n"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_sqp22"]
+radius = 27.0
+height = 130.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_315uc"]
+radius = 19.105
+
+[sub_resource type="Gradient" id="Gradient_wwu50"]
+offsets = PackedFloat32Array(0, 0.432099, 1)
+colors = PackedColorArray(0, 1, 0.4, 0, 0, 0.94902, 0.658824, 1, 0, 0.883333, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_h1wby"]
+gradient = SubResource("Gradient_wwu50")
+
+[sub_resource type="Curve" id="Curve_vbblg"]
+_data = [Vector2(0, 0.494737), 0.0, 0.0, 0, 0, Vector2(0.991081, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_fdajc"]
+curve = SubResource("Curve_vbblg")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_0smik"]
+lifetime_randomness = 0.3
+emission_shape = 3
+emission_box_extents = Vector3(1, 15, 1)
+particle_flag_disable_z = true
+spread = 30.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = -200.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_fdajc")
+color_ramp = SubResource("GradientTexture1D_h1wby")
+
+[node name="Enemy" type="Area2D"]
+collision_layer = 2
+collision_mask = 13
+script = ExtResource("1_p3o31")
+speed = 200
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 4.71239
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_t4v8n")
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_sqp22")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(14, -36)
+shape = SubResource("CircleShape2D_315uc")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="."]
+position = Vector2(11, 33)
+shape = SubResource("CircleShape2D_315uc")
+
+[node name="FlameParticleEffect" type="GPUParticles2D" parent="."]
+position = Vector2(59, -1)
+rotation = 3.14159
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_0smik")
+lifetime = 0.3
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
